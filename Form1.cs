@@ -65,7 +65,7 @@ namespace CSDLDPT_SQL
         {
             
             imageList1.Images.Add(ByteToImg(richConvert.Text));
-            imageList1.ImageSize = new Size(220, 250);
+            imageList1.ImageSize = new Size(256, 256);
             this.listView_img.View = View.LargeIcon;
             for (int counter = 0; counter < imageList1.Images.Count; counter++)
             {
@@ -78,30 +78,34 @@ namespace CSDLDPT_SQL
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
-            clear();
+            
             string constr = @"Data Source=PLASTIC_PIG;Initial Catalog=CSDLDPT;Integrated Security=True";
             using (SqlConnection conn = new SqlConnection(constr))
             {
-                string sql = "INSERT INTO IMG VALUES(@title, @Byte)";
+                string sql = "INSERT INTO MEDIA VALUES(@title, @Byte)";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
+                    String s = richConvert.Text;
+
                     cmd.Parameters.AddWithValue("@title", txtTitle.Text);
                     cmd.Parameters.AddWithValue("@Byte", richConvert.Text);
                     conn.Open();
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
+                
             }
             getdata();
+            clear();
         }
         public void getdata()
         {
             string constr = @"Data Source=PLASTIC_PIG;Initial Catalog=CSDLDPT;Integrated Security=True";
             using (SqlConnection conn = new SqlConnection(constr))
             {
-                using (SqlDataAdapter sda = new SqlDataAdapter("SELECT * FROM IMG", conn))
+                using (SqlDataAdapter sda = new SqlDataAdapter("SELECT * FROM MEDIA", conn))
                 {
-                    DataTable dt = new DataTable("IMG");
+                    DataTable dt = new DataTable("MEDIA");
                     sda.Fill(dt);
                     dataGridView1.DataSource = dt;
                 }
@@ -119,6 +123,11 @@ namespace CSDLDPT_SQL
             txtTitle.Clear();
             txtUrl.Clear();
             richConvert.Clear();
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            clear();
         }
     }
 }
